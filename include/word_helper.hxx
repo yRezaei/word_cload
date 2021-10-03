@@ -15,7 +15,7 @@
 #include <utility>
 #include <vector>
 
-namespace hm1 {
+namespace helper {
 using namespace std::literals;
 
 using WordData = std::pair<std::string, unsigned>;

@@ -1,5 +1,5 @@
 
-#include "include/home_work_1.hxx"
+#include "include/word_helper.hxx"
 #include <iostream>
 
 using namespace std::literals;
@@ -8,14 +8,14 @@ int main(int argc, char const *argv[]) {
   std::string file_path;
   auto max_words = 100U;
   auto min_size = 5U;
-  auto out_dir = "./"s;
+  auto out_path = std::filesystem::path{"./"s};
 
   for (auto k = 1; k < argc; ++k) {
     std::string arg = argv[k];
     if (arg == "-f"s) {
       file_path = argv[++k];
     } else if (arg == "-d"s) {
-      out_dir = argv[++k];
+      out_path = std::filesystem::path{argv[++k]};
     } else if (arg == "-w"s) {
       max_words = std::stoi(argv[++k]);
     } else if (arg == "-s"s) {
@@ -32,7 +32,7 @@ int main(int argc, char const *argv[]) {
 
   // Reading words from file
   auto start_time = time_now();
-  auto word_map = hm1::get_words(file_path);
+  auto word_map = helper::get_words(file_path);
   auto time_get_words = duration(time_now() - start_time);
   std::cout << "Time reading words: " << std::setprecision(5)
             << time_get_words / 1000000.0 << 's' << std::endl;
@@ -43,8 +43,8 @@ int main(int argc, char const *argv[]) {
 
   // Filtering the maximum frequency from words list
   start_time = time_now();
-  hm1::filter_words_data(word_map,
-                         [&max_words](const hm1::WordData &word_data) {
+  helper::filter_words_data(word_map,
+                         [&max_words](const helper::WordData &word_data) {
                            return word_data.second <= max_words;
                          });
   auto time_filter_max_words = duration(time_now() - start_time);
@@ -53,7 +53,7 @@ int main(int argc, char const *argv[]) {
 
   // Filtering the minimum size from words list
   start_time = time_now();
-  hm1::filter_words_data(word_map, [&min_size](const hm1::WordData &word_data) {
+  helper::filter_words_data(word_map, [&min_size](const helper::WordData &word_data) {
     return word_data.first.size() <= min_size;
   });
   auto time_filter_min_size = duration(time_now() - start_time);
@@ -62,8 +62,8 @@ int main(int argc, char const *argv[]) {
 
   // Sorting words based on decending frequency
   start_time = time_now();
-  hm1::sort_words_data(word_map, [](const hm1::WordData &word_data_1,
-                                    const hm1::WordData &word_data_2) {
+  helper::sort_words_data(word_map, [](const helper::WordData &word_data_1,
+                                    const helper::WordData &word_data_2) {
     return word_data_1.second > word_data_2.second;
   });
   auto time_sort_words_data = duration(time_now() - start_time);
@@ -72,8 +72,8 @@ int main(int argc, char const *argv[]) {
 
   // Writing words into tag cloud format
   start_time = time_now();
-  hm1::create_tag_cloud(
-      word_map, "/home/yar/cpp_course_2021/homework1/data/tag_cloud.html");
+  helper::create_tag_cloud(
+      word_map, (out_path / "word_cloud.html"s).string());
   auto time_create_tag_cloud = duration(time_now() - start_time);
   std::cout << "Time create tag cloud: " << std::setprecision(5)
             << time_create_tag_cloud / 1000000.0 << 's' << std::endl;
