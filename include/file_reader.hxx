@@ -6,28 +6,35 @@
 
 using namespace std::literals;
 
-class FileReader {
+class FileReader
+{
 private:
   std::ifstream file;
 
 public:
   FileReader(const std::string &file_name,
-             helper::ErrorCallback error_callback) {
-    if (std::filesystem::exists(file_name)) {
+             helper::ErrorCallback error_callback)
+  {
+    if (std::filesystem::exists(file_name))
+    {
       file.open(file_name);
-    } else {
+    }
+    else
+    {
       error_callback("ERROR -> Couldn't open the file: "s + file_name);
     }
   }
 
-  class iterator {
+  class iterator
+  {
   private:
     std::ifstream *file = nullptr;
     bool eof = false;
     std::string current_line;
 
   private:
-    std::string read_line() {
+    std::string read_line()
+    {
       std::string line;
       std::getline(*file, line);
       eof = !file->good();
@@ -41,7 +48,8 @@ public:
   public:
     void operator++() { current_line = read_line(); }
     std::string operator*() const { return current_line; }
-    bool operator!=(const iterator &itr) const {
+    bool operator!=(const iterator &itr) const
+    {
       return (*this).eof != itr.eof;
     }
   };

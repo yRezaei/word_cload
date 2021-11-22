@@ -3,5 +3,5 @@
 
 namespace helper
 {
-    using ErrorCallback = std::function<void(const std::string&)>;
+    using ErrorCallback = std::function<void(const std::string &)>;
 }
